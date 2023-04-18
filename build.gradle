@@ -168,7 +168,7 @@ repositories {
 }
 
 dependencies {
-    zipArchive group: 'org.opensearch.plugin', name:'opensearch-job-scheduler', version: "${opensearch_build}"
+    zipArchive group: 'org.opensearch.plugin', name:'opensearch-job-scheduler', version: "${bwcVersion}-SNAPSHOT"
     implementation "org.opensearch:opensearch:${opensearch_version}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${kotlin_version}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-common:${kotlin_version}"
@@ -303,7 +303,9 @@ testClusters.integTest {
             return new RegularFile() {
                 @Override
                 File getAsFile() {
-                    return configurations.zipArchive.asFileTree.getSingleFile()
+                    return configurations.zipArchive.asFileTree.matching {
+                        include '**/opensearch-job-scheduler*'
+                    }.singleFile
                 }
             }
         }
@@ -395,7 +397,9 @@ task prepareBwcTests {
                         return new RegularFile() {
                             @Override
                             File getAsFile() {
-                                return configurations.zipArchive.asFileTree.getSingleFile()
+                                return configurations.zipArchive.asFileTree.matching {
+                                    include '**/opensearch-job-scheduler*'
+                                }.singleFile
                             }
                         }
                     }
