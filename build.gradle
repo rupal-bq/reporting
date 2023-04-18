@@ -164,9 +164,6 @@ allprojects {
 String baseVersion = "2.7.0"
 String bwcVersion = baseVersion + ".0"
 String baseName = "reportsSchedulerBwcCluster"
-String bwcFilePath = "src/test/resources/bwc"
-String bwcJobSchedulerURL = "https://aws.oss.sonatype.org/content/repositories/snapshots/org/opensearch/plugin/opensearch-job-scheduler/2.7.0.0-SNAPSHOT/opensearch-job-scheduler-2.7.0.0-20230305.020625-11.zip"
-String bwcReportsSchedulerURL = "https://aws.oss.sonatype.org/content/repositories/snapshots/org/opensearch/plugin/opensearch-reports-scheduler/2.7.0.0-SNAPSHOT/opensearch-reports-scheduler-2.7.0.0-20230306.195720-1.zip"
 
 repositories {
     mavenLocal()
@@ -177,6 +174,7 @@ repositories {
 
 dependencies {
     zipArchive group: 'org.opensearch.plugin', name:'opensearch-job-scheduler', version: "${bwcVersion}-SNAPSHOT"
+    zipArchive group: 'org.opensearch.plugin', name:'opensearch-reports-scheduler', version: "${bwcVersion}-SNAPSHOT"
     implementation "org.opensearch:opensearch:${opensearch_version}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${kotlin_version}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-common:${kotlin_version}"
@@ -346,15 +344,9 @@ testClusters.integTest {
                     return new RegularFile() {
                         @Override
                         File getAsFile() {
-                            File dir = new File(bwcFilePath + "/job-scheduler/" + bwcVersion)
-                            if (!dir.exists()) {
-                                dir.mkdirs()
-                            }
-                            File file = new File(dir, "opensearch-job-scheduler-" + bwcVersion + ".zip")
-                            if (!file.exists()) {
-                                new URL(bwcJobSchedulerURL).withInputStream{ ins -> file.withOutputStream{ it << ins }}
-                            }
-                            return fileTree(bwcFilePath + "/job-scheduler/" + bwcVersion).getSingleFile()
+                            return configurations.zipArchive.asFileTree.matching {
+                                include '**/opensearch-job-scheduler*'
+                            }.singleFile
                         }
                     }
                 }
@@ -365,15 +357,9 @@ testClusters.integTest {
                     return new RegularFile() {
                         @Override
                         File getAsFile() {
-                            File dir = new File(bwcFilePath + "/reports-scheduler/" + bwcVersion)
-                            if (!dir.exists()) {
-                                dir.mkdirs()
-                            }
-                            File file = new File(dir, "opensearch-reports-scheduler-" + bwcVersion + ".zip")
-                            if (!file.exists()) {
-                                new URL(bwcReportsSchedulerURL).withInputStream{ ins -> file.withOutputStream{ it << ins }}
-                            }
-                            return fileTree(bwcFilePath + "/reports-scheduler/" + bwcVersion).getSingleFile()
+                            return configurations.zipArchive.asFileTree.matching {
+                                include '**/opensearch-reports-scheduler*'
+                            }.singleFile
                         }
                     }
                 }
