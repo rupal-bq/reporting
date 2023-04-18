@@ -173,8 +173,8 @@ repositories {
 }
 
 dependencies {
-    zipArchive group: 'org.opensearch.plugin', name:'opensearch-job-scheduler', version: "${bwcVersion}-SNAPSHOT"
-    zipArchive group: 'org.opensearch.plugin', name:'opensearch-reports-scheduler', version: "${bwcVersion}-SNAPSHOT"
+    zipArchive group: 'org.opensearch.plugin', name:'opensearch-job-scheduler', version: "${opensearch_build}"
+    zipArchive group: 'org.opensearch.plugin', name:'opensearch-reports-scheduler', version: "${opensearch_build}"
     implementation "org.opensearch:opensearch:${opensearch_version}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${kotlin_version}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-common:${kotlin_version}"
